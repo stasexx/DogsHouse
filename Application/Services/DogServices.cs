@@ -1,4 +1,5 @@
-﻿using Application.IServices;
+﻿using System.Linq.Expressions;
+using Application.IServices;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -14,19 +15,32 @@ public class DogServices : IDogServices
         _context = context;
     }
 
-    public async Task<List<object>> GetDogs()
+    public async Task<List<object>> GetDogs(string attribute, string order, int pageNumber, int pageSize)
     {
-        var dogs = await _context.Dogs
-            .Select(dog => new
-            {
-                Name = dog.Name,
-                Color = dog.Color,
-                TailLength = dog.TailLength,
-                Weight = dog.Weight
-            })
-            .ToListAsync();
+        var orderBy = attribute switch
+        {
+            "name" => (Expression<Func<Dog, object>>)(dog => dog.Name),
+            "color" => dog => dog.Color,
+            "tail_length" => dog => dog.TailLength,
+            "weight" => dog => dog.Weight,
+            _ => dog => dog.Name
+        };
 
-        return dogs.Cast<object>().ToList();
+        var orderedDogs = order.ToLower() == "desc"
+            ? await _context.Dogs.OrderByDescending(orderBy).ToListAsync()
+            : await _context.Dogs.OrderBy(orderBy).ToListAsync();
+
+        int skip = (pageNumber - 1) * pageSize;
+        var pagedDogs = orderedDogs.Skip(skip).Take(pageSize);
+
+        var result = pagedDogs.Select(dog => (object)new
+        {
+            dog.Name,
+            dog.Color,
+            dog.TailLength,
+            dog.Weight
+        }).ToList();
+
+        return result;
     }
-
 }

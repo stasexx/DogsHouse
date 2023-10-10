@@ -14,8 +14,10 @@ public class DogController : BaseController
     }
     
     [HttpGet("dogs")]
-    public async Task<List<object>> GetDogs()
+    public async Task<IActionResult> GetDogs(string attribute = "name", string order = "asc", int pageNumber = 1, int pageSize = 10)
     {
-        return await _dogServices.GetDogs();
+        var dogs = await _dogServices.GetDogs(attribute, order, pageNumber, pageSize);
+
+        return Ok(dogs);
     }
 }
