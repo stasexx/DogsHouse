@@ -118,10 +118,10 @@ public class CreateDogTests
     }
     
     [Fact]
-    public void WeightChecker_ShouldReturnTrue_WhenValidTailLength()
+    public void WeightChecker_ShouldReturnTrue_WhenValidWeight()
     {
         var dogService = new DogServices(null);
-        var validDog = new Dog { TailLength = 3 };
+        var validDog = new Dog { Weight = 3 };
         
         var result = dogService.WeightChecker(validDog);
 
@@ -129,7 +129,7 @@ public class CreateDogTests
     }
 
     [Fact]
-    public void WeightChecker_ShouldReturnFalse_WhenInvalidTailLength()
+    public void WeightChecker_ShouldReturnFalse_WhenInvalidWeight()
     {
         var dogService = new DogServices(null);
         var invalidDog = new Dog { Weight = -12 };
