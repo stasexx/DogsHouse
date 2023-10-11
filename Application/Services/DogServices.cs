@@ -14,33 +14,16 @@ public class DogServices : IDogServices
     {
         _context = context;
     }
+    
+    public bool NameChecker(Dog dog) => _context.Dogs.Any(d => d.Name == dog.Name);
 
-    public async Task<List<object>> GetDogs(string attribute, string order, int pageNumber, int pageSize)
+    public bool TailChecker(Dog dog)
     {
-        var orderBy = attribute switch
+        if (dog.TailLength<0)
         {
-            "name" => (Expression<Func<Dog, object>>)(dog => dog.Name),
-            "color" => dog => dog.Color,
-            "tail_length" => dog => dog.TailLength,
-            "weight" => dog => dog.Weight,
-            _ => dog => dog.Name
-        };
+            return false;
+        }
 
-        var orderedDogs = order.ToLower() == "desc"
-            ? await _context.Dogs.OrderByDescending(orderBy).ToListAsync()
-            : await _context.Dogs.OrderBy(orderBy).ToListAsync();
-
-        int skip = (pageNumber - 1) * pageSize;
-        var pagedDogs = orderedDogs.Skip(skip).Take(pageSize);
-
-        var result = pagedDogs.Select(dog => (object)new
-        {
-            dog.Name,
-            dog.Color,
-            dog.TailLength,
-            dog.Weight
-        }).ToList();
-
-        return result;
+        return true;
     }
 }

@@ -1,3 +1,6 @@
+using API.Controllers;
+using API.Midleware;
+using Application.Dogs;
 using Application.IServices;
 using Application.Services;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +20,8 @@ builder.Services.AddDbContext<DataContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Create.Handler).Assembly));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DogsList.Handler).Assembly));
 
 var app = builder.Build();
 
@@ -26,6 +31,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseRequestRateLimit(10);
 
 app.UseHttpsRedirection();
 
