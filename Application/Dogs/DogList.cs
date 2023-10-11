@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Models;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,9 +11,9 @@ using Persistence;
 
 namespace Application.Dogs
 {
-    public class DogsList
+    public class DogList
     {
-        public class Command : IRequest<List<object>>
+        public class Command : IRequest<List<DogDto>>
         {
             public string AttributeName { get; set; }
             public string OrderType { get; set; }
@@ -20,7 +21,7 @@ namespace Application.Dogs
             public int PageSize { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, List<object>>
+        public class Handler : IRequestHandler<Command, List<DogDto>>
         {
             private readonly DataContext _context;
 
@@ -29,7 +30,7 @@ namespace Application.Dogs
                 _context = context;
             }
 
-            public async Task<List<object>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<List<DogDto>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var orderBy = request.AttributeName switch
                 {
@@ -47,15 +48,13 @@ namespace Application.Dogs
                 int skip = (request.PageNumber - 1) * request.PageSize;
                 var pagedDogs = orderedDogs.Skip(skip).Take(request.PageSize);
 
-                var result = pagedDogs.Select(dog => (object)new
+                return pagedDogs.Select(dog => new DogDto
                 {
-                    dog.Name,
-                    dog.Color,
-                    dog.TailLength,
-                    dog.Weight
+                    Name = dog.Name,
+                    Color = dog.Color,
+                    TailLength = dog.TailLength,
+                    Weight = dog.Weight
                 }).ToList();
-
-                return result;
             }
         }
     }

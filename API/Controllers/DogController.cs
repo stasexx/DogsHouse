@@ -18,7 +18,7 @@ public class DogController : BaseController
     [HttpGet("dogs")]
     public async Task<IActionResult> GetDogs(string attribute = "name", string order = "asc", int pageNumber = 1, int pageSize = 10)
     {
-        var dogs = await Mediator.Send(new DogsList.Command
+        var dogs = await Mediator.Send(new DogList.Command
         {
             AttributeName = attribute, 
             OrderType = order,
@@ -42,7 +42,12 @@ public class DogController : BaseController
             return Conflict("A dog with the same name already exists.");
         }
         
-        if (!_dogServices.TailChecker(dog))
+        if (!_dogServices.TailChecker(dog) )
+        {
+            return BadRequest("Tail length cannot be negative.");
+        }
+        
+        if (!_dogServices.WeightChecker(dog) )
         {
             return BadRequest("Tail length cannot be negative.");
         }

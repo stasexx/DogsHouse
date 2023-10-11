@@ -19,11 +19,19 @@ public class DogServices : IDogServices
 
     public bool TailChecker(Dog dog)
     {
-        if (dog.TailLength<0)
+        if (dog.TailLength < 0)
         {
             return false;
         }
-
+        return true;
+    }
+    
+    public bool WeightChecker(Dog dog)
+    {
+        if (dog.Weight < 0)
+        {
+            return false;
+        }
         return true;
     }
 }
