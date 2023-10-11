@@ -1,5 +1,5 @@
 using API.Controllers;
-using API.Midleware;
+using API.Middleware;
 using Application.Dogs;
 using Application.IServices;
 using Application.Services;
@@ -21,7 +21,7 @@ builder.Services.AddDbContext<DataContext>(opt =>
 });
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Create.Handler).Assembly));
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DogsList.Handler).Assembly));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DogList.Handler).Assembly));
 
 var app = builder.Build();
 

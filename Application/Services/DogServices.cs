@@ -1,7 +1,5 @@
-﻿using System.Linq.Expressions;
-using Application.IServices;
+﻿using Application.IServices;
 using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Services;
