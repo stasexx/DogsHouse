@@ -49,7 +49,7 @@ public class DogController : BaseController
         
         if (!_dogServices.WeightChecker(dog) )
         {
-            return BadRequest("Tail length cannot be negative.");
+            return BadRequest("Weight cannot be negative and zero.");
         }
         
         dog.Id = Guid.NewGuid();
