@@ -26,7 +26,7 @@ public class DogServices : IDogServices
     
     public bool WeightChecker(Dog dog)
     {
-        if (dog.Weight < 0)
+        if (dog.Weight <= 0)
         {
             return false;
         }
